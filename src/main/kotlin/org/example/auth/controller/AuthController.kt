@@ -110,23 +110,28 @@ class AuthController {
         val roles: MutableSet<Role> = HashSet()
 
         strRoles.forEach(Consumer { role: String? ->
-            when (role) {
-                "ADMIN" -> {
-                    val adminRole: Role = roleRepository.findByName("ADMIN")
-                    roles.add(adminRole)
+            when (role?.lowercase()) {
+                "admin" -> {
+                    roleRepository.findByName("ADMIN")?.getOrNull().let {
+                        if (it != null) {
+                            roles.add(it)
+                        }
+                    }
                 }
 
                 else -> {
-                    val userRole: Role = roleRepository.findByName("USER")
-                    roles.add(userRole)
+                    roleRepository.findByName("USER")?.getOrNull().let {
+                        if (it != null) {
+                            roles.add(it)
+                        }
+                    }
                 }
             }
         })
-
         user.roles = roles
         userRepository.save(user)
 
-        return ResponseEntity.ok(Response("User registered successfully!", null))
+        return ResponseEntity.ok(Response("User registered successfully!", user))
     }
 
     @PostMapping("/refreshToken")

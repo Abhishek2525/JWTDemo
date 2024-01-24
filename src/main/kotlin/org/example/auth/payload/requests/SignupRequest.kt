@@ -3,8 +3,9 @@ package org.example.auth.payload.requests
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
+import java.io.Serializable
 
-class SignupRequest {
+class SignupRequest: Serializable {
     @Size(min = 3, max = 20)
     var username: @NotBlank String? = null
 

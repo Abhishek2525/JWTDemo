@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor
 import lombok.Getter
 import lombok.NoArgsConstructor
 import lombok.Setter
+import java.io.Serializable
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ import lombok.Setter
 @Entity
 @Table(
     name = "users")
-class User {
+class User : Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0

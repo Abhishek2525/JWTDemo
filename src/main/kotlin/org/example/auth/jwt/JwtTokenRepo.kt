@@ -1,11 +1,10 @@
 package org.example.auth.jwt
 
 import io.jsonwebtoken.*
-import org.example.auth.dao.Users
+import org.example.auth.dao.User
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import java.util.*
 
@@ -20,7 +19,7 @@ class JwtTokenRepo {
     @Value("\${jwt.expirationMs}")
     private val jwtExpirationMs = 0
 
-    fun generateJwtToken(userDetails: Users): String {
+    fun generateJwtToken(userDetails: User): String {
         return generateTokenFromUsername(userDetails.username)
     }
 

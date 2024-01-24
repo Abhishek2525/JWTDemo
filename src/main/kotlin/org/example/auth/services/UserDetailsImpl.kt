@@ -1,7 +1,7 @@
 package org.example.auth.services
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.example.auth.dao.Users
+import org.example.auth.dao.User
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -50,7 +50,7 @@ class UserDetailsImpl(
     companion object {
         private const val serialVersionUID = 1L
 
-        fun build(user: Users): UserDetailsImpl {
+        fun build(user: User): UserDetailsImpl {
             val authorities: List<GrantedAuthority> = user.roles.stream()
                 .map { role -> SimpleGrantedAuthority(role.name) }
                 .collect(Collectors.toList())

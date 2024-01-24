@@ -23,18 +23,18 @@ class JwtAuthMain : AuthenticationEntryPoint {
         authException: AuthenticationException
     ) {
         logger.error("Unauthorized error: {}", authException.message)
-
+//
         response.contentType = MediaType.APPLICATION_JSON_VALUE
-        response.status = HttpServletResponse.SC_UNAUTHORIZED
-
-        val body: MutableMap<String, Any?> = HashMap()
-        body["status"] = HttpServletResponse.SC_UNAUTHORIZED
-        body["error"] = "Unauthorized"
-        body["message"] = authException.message
-        body["path"] = request.servletPath
-
-        val mapper = ObjectMapper()
-        mapper.writeValue(response.outputStream, body)
+//        response.status = HttpServletResponse.SC_UNAUTHORIZED
+//
+//        val body: MutableMap<String, Any?> = HashMap()
+//        body["status"] = HttpServletResponse.SC_UNAUTHORIZED
+//        body["error"] = "Unauthorized"
+//        body["message"] = authException.message
+//        body["path"] = request.servletPath
+//
+//        val mapper = ObjectMapper()
+//        mapper.writeValue(response.outputStream, body)
 
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
     }

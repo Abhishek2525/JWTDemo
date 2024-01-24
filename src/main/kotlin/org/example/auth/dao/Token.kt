@@ -1,8 +1,10 @@
 package org.example.auth.dao
 
 import jakarta.persistence.*
+import lombok.Data
 import java.time.Instant
 
+@Data
 @Entity(name = "token")
 class Token {
     @Id
@@ -11,7 +13,7 @@ class Token {
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    var user: Users? = null
+    var user: User? = null
 
     @Column(nullable = false, unique = true)
     var token: String? = null

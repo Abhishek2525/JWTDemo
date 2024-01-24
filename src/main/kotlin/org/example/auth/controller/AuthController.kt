@@ -5,7 +5,7 @@ import jakarta.validation.Valid
 import org.example.auth.common.Roles
 import org.example.auth.dao.Role
 import org.example.auth.dao.Token
-import org.example.auth.dao.Users
+import org.example.auth.dao.User
 import org.example.auth.jwt.JwtTokenRepo
 import org.example.auth.payload.requests.LoginRequest
 import org.example.auth.payload.requests.RefreshTokenRequest
@@ -29,6 +29,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
 import java.util.function.Consumer
+import kotlin.jvm.optionals.getOrNull
 
 
 @CrossOrigin(origins = ["*"], maxAge = 3600)
@@ -67,18 +68,22 @@ class AuthController {
 
             SecurityContextHolder.getContext().authentication = authentication
             val data = SecurityContextHolder.getContext().authentication.principal as UserDetails
-            val userDetails = userRepository?.findUserByName(data.username)
+            val userDetails = userRepository?.findByUsername(data.username)
+            return userDetails?.getOrNull()?.let {
+                val jwt = jwtUtils!!.generateJwtToken(it)
 
-            val jwt = jwtUtils!!.generateJwtToken(userDetails!!)
+                val refreshToken: Token = refreshTokenService!!.createRefreshToken(it.id)
 
-            val refreshToken: Token = refreshTokenService!!.createRefreshToken(userDetails.id!!)
-
-            return ResponseEntity.ok(
-                JwtResponse(
-                    jwt, refreshToken.token.orEmpty(), userDetails.id!!,
-                    userDetails.username!!, userDetails.password!!, emptyList()
+                ResponseEntity.ok(
+                    JwtResponse(
+                        jwt, refreshToken.token.orEmpty(), it.id,
+                        it.username.orEmpty(), it.password.orEmpty(), emptyList()
+                    )
                 )
+            } ?: ResponseEntity.ok(
+                "Failed to generate token"
             )
+
         } catch (e: DisabledException) {
             throw Exception("USER_DISABLED", e)
         } catch (e: BadCredentialsException) {
@@ -88,24 +93,24 @@ class AuthController {
 
     @PostMapping("/signup")
     fun registerUser(@RequestBody signUpRequest: @Valid SignupRequest?): ResponseEntity<*> {
-        if (userRepository?.checkUserExists(signUpRequest?.username) == true) {
+        if (userRepository?.existsByUsername(signUpRequest?.username) == true) {
             return ResponseEntity.badRequest().body<Any>(Response(message = "Error: Username is already taken!", null))
         }
 
-        if (userRepository?.checkUserExistsByEmail(signUpRequest?.email) == true) {
+        if (userRepository?.existsByEmail(signUpRequest?.email) == true) {
             return ResponseEntity.badRequest().body<Any>(Response(message = "Error: Email is already in use!", null))
         }
 
         // Create new user's account
-        val user = Users(
+        val user = User(
             signUpRequest?.username, signUpRequest?.email,
             encoder!!.encode(signUpRequest?.password)
         )
 
         val strRoles = signUpRequest?.role.orEmpty()
-        val roles: MutableSet<Role> = HashSet<Role>()
+        val roles: MutableSet<Role> = HashSet()
 
-        strRoles.forEach(Consumer<String> { role: String? ->
+        strRoles.forEach(Consumer { role: String? ->
             when (role) {
                 "ADMIN" -> {
                     val adminRole: Role = roleRepository!!.findByName(Roles.ROLE_ADMIN)
@@ -156,10 +161,12 @@ class AuthController {
     @PostMapping("/signout")
     fun logoutUser(): ResponseEntity<Response> {
         val userDetails = SecurityContextHolder.getContext().authentication.principal as UserDetails
-        val users = userRepository?.findUserByName(userDetails.username)
-        val userId: Long = users?.id!!
-        refreshTokenService!!.deleteByUserId(userId)
-        return ResponseEntity.ok(Response("Log out successful!", null))
+        val users = userRepository?.findByUsername(userDetails.username)
+        return users?.getOrNull()?.let {
+            refreshTokenService!!.deleteByUserId(it.id)
+            ResponseEntity.ok(Response("Log out successful!", null))
+        } ?: ResponseEntity.ok(Response("Failed to log out", null))
+
     }
 
 }

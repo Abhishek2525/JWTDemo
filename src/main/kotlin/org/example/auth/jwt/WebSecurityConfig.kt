@@ -26,10 +26,10 @@ import org.springframework.web.filter.CorsFilter
 @EnableMethodSecurity
 class WebSecurityConfig {
     @Autowired
-    var userDetailsService: UserService? = null
+    lateinit var userDetailsService: UserService
 
     @Autowired
-    private val unauthorizedHandler: JwtAuthMain? = null
+    lateinit var unauthorizedHandler: JwtAuthMain
 
     @Bean
     fun authenticationJwtTokenFilter(): JwtRequestFilter {

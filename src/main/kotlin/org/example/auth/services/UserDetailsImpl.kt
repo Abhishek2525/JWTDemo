@@ -56,10 +56,10 @@ class UserDetailsImpl(
                 .collect(Collectors.toList())
 
             return UserDetailsImpl(
-                user.id!!,
-                user.username!!,
-                user.email!!,
-                user.password!!,
+                user.id,
+                user.username.orEmpty(),
+                user.email.orEmpty(),
+                user.password.orEmpty(),
                 authorities
             )
         }

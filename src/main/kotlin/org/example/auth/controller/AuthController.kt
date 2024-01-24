@@ -37,28 +37,28 @@ import kotlin.jvm.optionals.getOrNull
 class AuthController {
 
     @Autowired
-    var authenticationManager: AuthenticationManager? = null
+    lateinit var authenticationManager: AuthenticationManager
 
     @Autowired
-    var userRepository: UserRepository? = null
+    lateinit var userRepository: UserRepository
 
     @Autowired
-    var roleRepository: RoleRepository? = null
+    lateinit var roleRepository: RoleRepository
 
     @Autowired
-    var encoder: PasswordEncoder? = null
+    lateinit var encoder: PasswordEncoder
 
     @Autowired
-    var jwtUtils: JwtTokenRepo? = null
+    lateinit var jwtUtils: JwtTokenRepo
 
     @Autowired
-    var refreshTokenService: RefreshTokenService? = null
+    lateinit var refreshTokenService: RefreshTokenService
 
 
     @PostMapping("/signin")
     fun authenticateUser(@RequestBody loginRequest: @Valid LoginRequest?): ResponseEntity<*> {
         try {
-            val authentication: Authentication = authenticationManager!!.authenticate(
+            val authentication: Authentication = authenticationManager.authenticate(
                 UsernamePasswordAuthenticationToken(
                     loginRequest?.username,
                     loginRequest?.password
@@ -67,11 +67,11 @@ class AuthController {
 
             SecurityContextHolder.getContext().authentication = authentication
             val data = SecurityContextHolder.getContext().authentication.principal as UserDetails
-            val userDetails = userRepository?.findByUsername(data.username)
+            val userDetails = userRepository.findByUsername(data.username)
             return userDetails?.getOrNull()?.let {
-                val jwt = jwtUtils!!.generateJwtToken(it)
+                val jwt = jwtUtils.generateJwtToken(it)
 
-                val refreshToken: Token = refreshTokenService!!.createRefreshToken(it.id)
+                val refreshToken: Token = refreshTokenService.createRefreshToken(it.id)
 
                 ResponseEntity.ok(
                     JwtResponse(
@@ -92,18 +92,18 @@ class AuthController {
 
     @PostMapping("/signup")
     fun registerUser(@RequestBody signUpRequest: @Valid SignupRequest?): ResponseEntity<*> {
-        if (userRepository?.existsByUsername(signUpRequest?.username) == true) {
+        if (userRepository.existsByUsername(signUpRequest?.username) == true) {
             return ResponseEntity.badRequest().body<Any>(Response(message = "Error: Username is already taken!", null))
         }
 
-        if (userRepository?.existsByEmail(signUpRequest?.email) == true) {
+        if (userRepository.existsByEmail(signUpRequest?.email) == true) {
             return ResponseEntity.badRequest().body<Any>(Response(message = "Error: Email is already in use!", null))
         }
 
         // Create new user's account
         val user = User(
             signUpRequest?.username, signUpRequest?.email,
-            encoder!!.encode(signUpRequest?.password),
+            encoder.encode(signUpRequest?.password),
         )
 
         val strRoles = signUpRequest?.role.orEmpty()
@@ -112,19 +112,19 @@ class AuthController {
         strRoles.forEach(Consumer { role: String? ->
             when (role) {
                 "ADMIN" -> {
-                    val adminRole: Role = roleRepository!!.findByName("ADMIN")
+                    val adminRole: Role = roleRepository.findByName("ADMIN")
                     roles.add(adminRole)
                 }
 
                 else -> {
-                    val userRole: Role = roleRepository!!.findByName("USER")
+                    val userRole: Role = roleRepository.findByName("USER")
                     roles.add(userRole)
                 }
             }
         })
 
         user.roles = roles
-        userRepository!!.save(user)
+        userRepository.save(user)
 
         return ResponseEntity.ok(Response("User registered successfully!", null))
     }
@@ -132,11 +132,11 @@ class AuthController {
     @PostMapping("/refreshToken")
     fun refreshtoken(@RequestBody request: @Valid RefreshTokenRequest?): ResponseEntity<*> {
         val requestRefreshToken: String = request?.refreshToken.orEmpty()
-        val resp = refreshTokenService?.findUserByToken(requestRefreshToken)
-            ?.map { token -> refreshTokenService!!.verifyExpiration(token!!) }
+        val resp = refreshTokenService.findUserByToken(requestRefreshToken)
+            ?.map { token -> refreshTokenService.verifyExpiration(token!!) }
             ?.map(Token::user)
             ?.map { user ->
-                val token = jwtUtils!!.generateTokenFromUsername(user?.username)
+                val token = jwtUtils.generateTokenFromUsername(user?.username)
                 ResponseEntity.ok(JwtTokeRefreshResponse(token, requestRefreshToken))
             }?.orElseThrow {
                 JwtException(
@@ -150,9 +150,9 @@ class AuthController {
     @PostMapping("/signout")
     fun logoutUser(): ResponseEntity<Response> {
         val userDetails = SecurityContextHolder.getContext().authentication.principal as UserDetails
-        val users = userRepository?.findByUsername(userDetails.username)
+        val users = userRepository.findByUsername(userDetails.username)
         return users?.getOrNull()?.let {
-            refreshTokenService!!.deleteByUserId(it.id)
+            refreshTokenService.deleteByUserId(it.id)
             ResponseEntity.ok(Response("Log out successful!", null))
         } ?: ResponseEntity.ok(Response("Failed to log out", null))
 

@@ -14,31 +14,31 @@ import java.util.*
 @Service
 class RefreshTokenService {
     @Value("\${jwt.refreshExpirationMs}")
-    private val refreshTokenDurationMs: Long? = null
+    var refreshTokenDurationMs: Long = 0
 
     @Autowired
-    private val refreshTokenRepository: RefreshTokenRepository? = null
+    lateinit var refreshTokenRepository: RefreshTokenRepository
 
     @Autowired
-    private val userRepository: UserRepository? = null
+    lateinit var userRepository: UserRepository
 
     fun findUserByToken(token: String?): Optional<Token?>? {
-        return refreshTokenRepository!!.findUserByToken(token)
+        return refreshTokenRepository.findUserByToken(token)
     }
 
     fun createRefreshToken(userId: Long): Token {
         var refreshToken = Token()
-        refreshToken.user = userRepository!!.findById(userId.toInt()).get()
-        refreshToken.expiryDate = Instant.now().plusMillis(refreshTokenDurationMs!!)
+        refreshToken.user = userRepository.findById(userId.toInt()).get()
+        refreshToken.expiryDate = Instant.now().plusMillis(refreshTokenDurationMs)
         refreshToken.token = UUID.randomUUID().toString()
 
-        refreshToken = refreshTokenRepository!!.save(refreshToken)
+        refreshToken = refreshTokenRepository.save(refreshToken)
         return refreshToken
     }
 
     fun verifyExpiration(token: Token): Token {
-        if (token.token!!.compareTo(Instant.now().toString()) < 0) {
-            refreshTokenRepository!!.delete(token)
+        if ((token.token?.compareTo(Instant.now().toString()) ?: 0) < 0) {
+            refreshTokenRepository.delete(token)
             throw JwtException(token.token, "Refresh token was expired. Please make a new sign in request")
         }
 
@@ -47,6 +47,6 @@ class RefreshTokenService {
 
     @Transactional
     fun deleteByUserId(userId: Long): Int {
-        return refreshTokenRepository!!.deleteByUser(userRepository!!.findById(userId.toInt()).get())
+        return refreshTokenRepository.deleteByUser(userRepository.findById(userId.toInt()).get())
     }
 }

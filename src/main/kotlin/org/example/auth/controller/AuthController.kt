@@ -111,6 +111,10 @@ class AuthController {
         val strRoles = signUpRequest?.role.orEmpty()
         val roles: MutableSet<Role> = HashSet()
 
+        if (roleRepository.findAll().isEmpty()) {
+            roleRepository.saveAll(listOf(Role("ADMIN"), Role("USER")))
+        }
+
         strRoles.forEach(Consumer { role: String? ->
             when (role?.lowercase()) {
                 "admin" -> {

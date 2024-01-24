@@ -25,14 +25,14 @@ class UserController {
         return list
     }
 
-    @GetMapping("/user")
+    @GetMapping("/profile")
     @PreAuthorize("hasRole('USER')")
     fun getAllDevs(): List<String> {
         val list = listOf("test1", "test2", "test3")
         return list
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/user/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getProfile(): List<String> {
         val list = listOf("user")

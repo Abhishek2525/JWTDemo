@@ -42,8 +42,9 @@ dependencies {
     runtimeOnly("com.h2database:h2")
 
     //jwt token
-    implementation("io.jsonwebtoken:jjwt-api:0.12.3")
     testImplementation("org.springframework.security:spring-security-test:6.1.4")
+    implementation("io.jsonwebtoken:jjwt:0.12.3")
+
 
     //serializable plugin
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.2.0")

@@ -1,3 +1,5 @@
 package org.example.auth.payload.responses
 
-data class Response(val message: String?, val data: Any?)
+import java.io.Serializable
+
+data class Response(val message: String?, val data: Any?): Serializable

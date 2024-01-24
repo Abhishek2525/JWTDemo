@@ -6,11 +6,12 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import java.io.Serializable
 import java.util.*
 
 
 @Component
-class JwtTokenRepo {
+class JwtTokenRepo : Serializable {
     private val logger: Logger = LoggerFactory.getLogger(JwtTokenRepo::class.java)
 
     @Value("\${jwt.secret}")
@@ -24,9 +25,13 @@ class JwtTokenRepo {
     }
 
     fun generateTokenFromUsername(username: String?): String {
-        return Jwts.builder().setSubject(username).setIssuedAt(Date())
-            .setExpiration(Date(Date().time + jwtExpirationMs)).signWith(SignatureAlgorithm.HS512, secret)
-            .compact()
+        val claims: Map<String, Any> = HashMap()
+        return Jwts.builder().setClaims(claims)
+            .setSubject(username)
+            .setIssuedAt(Date(System.currentTimeMillis()))
+            .setExpiration(Date(System.currentTimeMillis() + jwtExpirationMs))
+            .signWith(SignatureAlgorithm.HS512, secret)
+            .compact();
     }
 
     fun getUserNameFromJwtToken(token: String?): String {
@@ -35,6 +40,7 @@ class JwtTokenRepo {
 
     fun validateJwtToken(authToken: String?): Boolean {
         try {
+            val username = getUserNameFromJwtToken(authToken)
             Jwts.parser().setSigningKey(secret).build().parseClaimsJws(authToken)
             return true
         } catch (e: SignatureException) {

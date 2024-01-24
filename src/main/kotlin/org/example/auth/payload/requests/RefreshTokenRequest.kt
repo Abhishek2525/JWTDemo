@@ -1,6 +1,8 @@
 package org.example.auth.payload.requests
 
 import jakarta.validation.constraints.NotBlank
-class RefreshTokenRequest {
+import java.io.Serializable
+
+class RefreshTokenRequest: Serializable {
     var refreshToken: @NotBlank String? = null
 }

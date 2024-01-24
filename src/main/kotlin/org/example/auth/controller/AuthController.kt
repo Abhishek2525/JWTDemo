@@ -27,7 +27,9 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
+import java.util.Collections
 import java.util.function.Consumer
+import java.util.stream.Collectors
 import kotlin.jvm.optionals.getOrNull
 
 
@@ -72,11 +74,11 @@ class AuthController {
                 val jwt = jwtUtils.generateJwtToken(it)
 
                 val refreshToken: Token = refreshTokenService.createRefreshToken(it.id)
-
+                val roles = it.roles.stream().map { it.name ?: "USER" }.collect(Collectors.toList())
                 ResponseEntity.ok(
                     JwtResponse(
                         jwt, refreshToken.token.orEmpty(), it.id,
-                        it.username.orEmpty(), it.password.orEmpty(), emptyList()
+                        it.username.orEmpty(), it.password.orEmpty(), roles.toList()
                     )
                 )
             } ?: ResponseEntity.ok(

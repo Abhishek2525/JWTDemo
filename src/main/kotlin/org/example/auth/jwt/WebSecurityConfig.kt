@@ -66,9 +66,10 @@ class WebSecurityConfig {
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .exceptionHandling { it.authenticationEntryPoint(unauthorizedHandler) }
             .authorizeHttpRequests { auth ->
-                auth.requestMatchers("/api/auth/logout").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()
-                    .anyRequest().authenticated()
+                auth.requestMatchers("/api/auth/logout").authenticated()
+                    .requestMatchers(HttpMethod.GET, "/api/user/").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/user/**").authenticated()
+                    .requestMatchers("/**").permitAll()
             }
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(

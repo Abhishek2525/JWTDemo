@@ -25,3 +25,14 @@ curl --location 'http://localhost:8082/api/auth/signup' \
 -- For getting default all request url -
 
 curl --location 'http://localhost:8082/api/user/'
+
+
+-- For getting authorized api data
+
+curl --location 'http://localhost:8082/api/user/all' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmMiLCJpYXQiOjE3MDYwOTczMTQsImV4cCI6MTcwNjA5NzM3NH0.Lw1Vvk9rkr--HTdAmv8OoluEPb7ahmS7diaJu21a5PKQxL71xQreyUbmsZST-iYGa3Ih3Jrn3X25-cKPZYKXmA'
+
+other urls -
+/all
+/profile
+/allProfile

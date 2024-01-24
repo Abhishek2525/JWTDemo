@@ -40,7 +40,6 @@ class JwtTokenRepo : Serializable {
 
     fun validateJwtToken(authToken: String?): Boolean {
         try {
-            val username = getUserNameFromJwtToken(authToken)
             Jwts.parser().setSigningKey(secret).build().parseClaimsJws(authToken)
             return true
         } catch (e: SignatureException) {

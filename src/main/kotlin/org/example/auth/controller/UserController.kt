@@ -1,11 +1,9 @@
 package org.example.auth.controller
 
+import org.hibernate.query.QueryParameter
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Component
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @CrossOrigin(origins = ["*"], maxAge = 3600)
 @RestController
@@ -32,7 +30,8 @@ class UserController {
         return list
     }
 
-    @GetMapping("/user/{id}")
+
+    @GetMapping("/allProfile")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     fun getProfile(): List<String> {
         val list = listOf("user")

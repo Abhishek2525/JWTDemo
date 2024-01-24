@@ -1,0 +1,223 @@
+{
+	"info": {
+		"_postman_id": "f1b35d12-4a8a-4189-be0c-6329048c0cfc",
+		"name": "AuthDemo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4875556",
+		"_collection_link": "https://arccabs.postman.co/workspace/Arccabs-Team~9d82cb22-44ea-4123-80e7-69bb7c1774d0/collection/4875556-f1b35d12-4a8a-4189-be0c-6329048c0cfc?action=share&source=collection_link&creator=4875556"
+	},
+	"item": [
+		{
+			"name": "user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmMiLCJpYXQiOjE3MDYwOTg1MDIsImV4cCI6MTcwNjA5ODgwMn0.luL3ZEt_2ynRzNiDSD7aJxNa9jrezXt2YAWAhXjKErq36wsRcGyFzrq-l1orPz8Q7hFQMUrObLwj9xY2FVQhpg",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8082/api/user/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"user",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmMiLCJpYXQiOjE3MDYwOTg1MDIsImV4cCI6MTcwNjA5ODgwMn0.luL3ZEt_2ynRzNiDSD7aJxNa9jrezXt2YAWAhXjKErq36wsRcGyFzrq-l1orPz8Q7hFQMUrObLwj9xY2FVQhpg",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8082/api/user/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"user",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "allProfile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmMiLCJpYXQiOjE3MDYwOTg1MDIsImV4cCI6MTcwNjA5ODgwMn0.luL3ZEt_2ynRzNiDSD7aJxNa9jrezXt2YAWAhXjKErq36wsRcGyFzrq-l1orPz8Q7hFQMUrObLwj9xY2FVQhpg",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8082/api/user/allProfile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"user",
+						"allProfile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "profile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhYmMiLCJpYXQiOjE3MDYwOTg1MDIsImV4cCI6MTcwNjA5ODgwMn0.luL3ZEt_2ynRzNiDSD7aJxNa9jrezXt2YAWAhXjKErq36wsRcGyFzrq-l1orPz8Q7hFQMUrObLwj9xY2FVQhpg",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8082/api/user/profile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"user",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signup",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"abc\",\r\n\"password\":\"123456\",\r\n\"email\":\"abc@gmail.com\",\r\n\"role\":[\"USER\"] }"
+				},
+				"url": {
+					"raw": "http://localhost:8082/api/auth/signup",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "signin",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"username\":\"abc\",\r\n\"password\":\"123456\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8082/api/auth/signin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8082",
+					"path": [
+						"api",
+						"auth",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

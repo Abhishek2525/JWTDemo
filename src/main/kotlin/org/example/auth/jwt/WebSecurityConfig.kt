@@ -67,7 +67,6 @@ class WebSecurityConfig {
             .exceptionHandling { it.authenticationEntryPoint(unauthorizedHandler) }
             .authorizeHttpRequests { auth ->
                 auth.requestMatchers("/api/auth/logout").permitAll()
-                    .requestMatchers("/api/user/all").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()
                     .anyRequest().authenticated()
             }

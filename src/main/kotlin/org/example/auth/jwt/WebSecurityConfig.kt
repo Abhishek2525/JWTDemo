@@ -64,18 +64,18 @@ class WebSecurityConfig {
         // Enable CORS and disable CSRF
         http.cors { }.csrf { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-            .exceptionHandling { it.accessDeniedPage("/403") }
+            .exceptionHandling { it.authenticationEntryPoint(unauthorizedHandler) }
+            .authorizeHttpRequests { auth ->
+                auth.requestMatchers("/api/auth/logout").permitAll()
+                    .requestMatchers("/api/user/all").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()
+                    .anyRequest().authenticated()
+            }
             .authenticationProvider(authenticationProvider())
-            .httpBasic { it.authenticationEntryPoint(unauthorizedHandler) }
             .addFilterBefore(
                 authenticationJwtTokenFilter(),
                 UsernamePasswordAuthenticationFilter::class.java
             )
-            .authorizeRequests() // Our public endpoints
-            .requestMatchers("/api/user/all").permitAll()
-            .requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/auth/logout").permitAll()
-            .anyRequest().authenticated()
 
         return http.build()
     }

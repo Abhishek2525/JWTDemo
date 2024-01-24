@@ -2,7 +2,6 @@ package org.example.auth.controller
 
 
 import jakarta.validation.Valid
-import org.example.auth.common.Roles
 import org.example.auth.dao.Role
 import org.example.auth.dao.Token
 import org.example.auth.dao.User
@@ -104,7 +103,7 @@ class AuthController {
         // Create new user's account
         val user = User(
             signUpRequest?.username, signUpRequest?.email,
-            encoder!!.encode(signUpRequest?.password)
+            encoder!!.encode(signUpRequest?.password),
         )
 
         val strRoles = signUpRequest?.role.orEmpty()
@@ -113,22 +112,12 @@ class AuthController {
         strRoles.forEach(Consumer { role: String? ->
             when (role) {
                 "ADMIN" -> {
-                    val adminRole: Role = roleRepository!!.findByName(Roles.ROLE_ADMIN)
-                        ?.orElseThrow {
-                            RuntimeException(
-                                "Error: Role is not found."
-                            )
-                        } ?: Role(Roles.ROLE_ADMIN.name)
+                    val adminRole: Role = roleRepository!!.findByName("ADMIN")
                     roles.add(adminRole)
                 }
 
                 else -> {
-                    val userRole: Role = roleRepository!!.findByName(Roles.ROLE_USER)
-                        ?.orElseThrow {
-                            RuntimeException(
-                                "Error: Role is not found."
-                            )
-                        } ?: Role(Roles.ROLE_USER.name)
+                    val userRole: Role = roleRepository!!.findByName("USER")
                     roles.add(userRole)
                 }
             }

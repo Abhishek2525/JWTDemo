@@ -72,10 +72,9 @@ class WebSecurityConfig {
                 UsernamePasswordAuthenticationFilter::class.java
             )
             .authorizeRequests() // Our public endpoints
-            .requestMatchers("/api/**").permitAll()
+            .requestMatchers("/api/user/all").permitAll()
             .requestMatchers(HttpMethod.GET, "/api/user/**").permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/auth/").permitAll()
-            .requestMatchers(HttpMethod.PUT, "/api/auth/").permitAll()
+            .requestMatchers(HttpMethod.POST, "/api/auth/logout").permitAll()
             .anyRequest().authenticated()
 
         return http.build()

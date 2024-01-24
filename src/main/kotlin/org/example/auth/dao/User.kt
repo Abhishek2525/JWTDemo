@@ -36,7 +36,7 @@ class User {
     @Size(max = 120)
     var password: String? = null
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     @JoinTable(
         name = "user_roles",
         joinColumns = [JoinColumn(name = "user_id")],
